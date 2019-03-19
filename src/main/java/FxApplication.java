@@ -1,8 +1,12 @@
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.SnapshotResult;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -10,6 +14,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 public class FxApplication extends Application {
 
@@ -22,6 +30,24 @@ public class FxApplication extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
+        createStage(stage);
+        createPng(stage.getScene());
+    }
+
+    private void createPng(Scene scene) {
+        WritableImage image = scene.snapshot(null);
+
+
+        try {
+            File file = File.createTempFile("test", ".png");
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+            System.out.println(file.getAbsolutePath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void createStage(Stage stage) {
         stage.setTitle("Hello World!");
 
         GridPane grid = new GridPane();
